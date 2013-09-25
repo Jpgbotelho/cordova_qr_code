@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Scan Image</title>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="json2.js"></script>
+    <script type="text/javascript" charset="utf-8">
+      function captureSuccess(mediaFiles) {
+          var i, len;
+          for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+              navigator.notification.alert(mediaFiles[i]['fullPath'], null, 'Decoded!');
+          }
+      }
+
+      function captureError(error) {
+          var msg = 'An error occurred during capture: ' + error.code;
+          navigator.notification.alert(msg, null, 'Uh oh!');
+      }
+
+      function captureImage() {
+          navigator.device.capture.captureImage(captureSuccess, captureError, {limit: 1});
+      }
+
+      function scanSuccess(result){
+          if(result.cancelled){
+            navigator.notification.alert("Scan action cancelled.", null, 'Cancelled!');
+          }else{
+          navigator.notification.alert(result.text, null, 'Decoded!');
+          }
+      }
+
+      function scanError(error){ 
+          navigator.notification.alert(error, null, 'Error!');
+      }
+
+      function scan(){
+          scanner = cordova.require("cordova/plugin/BarcodeScanner");
+          scanner.scan(scanSuccess, scanError);
+      }
+    </script>
+    <script type="text/javascript">
+            app.initialize();
+    </script>
+    </head>
+    <body>
+        <button onclick="scan();">Capture Image</button> <br>
+    </body>
+</html>
